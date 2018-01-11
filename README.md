@@ -21,8 +21,8 @@ Sample files:
 ## Installation
 
 ```
-$ git clone https://github.com/grokify/ringcentral-demos-fax-cover-page
-$ cd ringcentral-demos-fax-cover-page/nodejs
+$ git clone https://github.com/ringcentral-tutorials/fax-cover-page-nodejs-demo.git
+$ cd fax-cover-page-nodejs-demo
 $ npm install
 ```
 
