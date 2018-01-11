@@ -1,36 +1,51 @@
-.chapter(data-title='Your New Viewsaurus Tutorial')
-  .step(data-title='Welcome!', data-file='tutorial/config.json')
-    h2 Welcome to Viewsaurus
+.chapter(data-title='RingCentral OAuth demo in Node.js')
+  .step(data-title='Set up the project', data-file='README.md', data-highlight='24-26')
+    :markdown
+      * Clone the demo repo with git.
+      * Install dependencies with NPM
 
-    p Thanks for writing a Viewsaurus tutorial! If you're new to Viewsaurus, feel free to click through this brief tutorial showing you how a Viewsaurus tutorial is structured.
+      *To install NPM, please install [Node.js](https://nodejs.org/)*
 
-    p The tutorial's navigation controls are located above this text. Use <i class="fa fa-fw fa-play"></i> to move to the next step of the tutorial. Use <i class="fa fa-fw fa-play fa-rotate-180"></i> to move to the previous step of the tutorial (if there is one). Use <i class="fa fa-fw fa-list"></i> to see an overview of all the steps in the tutorial.
-
-    p Let's begin by walking through the files generated for you in the `tutorial` directory with the `saurus new` command - those files are actually what is being used to show you this tutorial right now!
-
-  .step(data-title='Tutorial Configuration', data-file='tutorial/config.json')
+  .step(data-title='Configure the app appropriately', data-file='.env.sample')
     :markdown
       ## Configuration
 
-      The first file we'll look at is `config.json`. This contains high-level configuration information about your tutorial. This JSON file contains several properties you can declare about your tutorial:
+      Edit the `.env` file to configure your client ID, client secret and redirect URL, etc.
+      
+      ```
+      $ cp .env.sample .env
+      $ vi .env
+      ```
+      
+      Please visit [Developer Portal](http://developer.ringcentral.com/) to apply client ID and secret. And ensure the redirect URI in your config file has been entered in your app settings. By default, the URL is set to the following for this demo:
+      
+      ```
+      http://localhost:8080/callback
+      ```
 
-      * `title`: This is the title of your tutorial which will show on the first page
-      * `description`: This is a string of text that will appear above the "Start" button for your tutorial.
-      * `repo`: This is the GitHub repo that your code lives in. Right now we assume all projects are hosted there, but we'll likely make this agnostic in the future.
-      * `heroku`: This indicates whether or not your project supports instant deployment with the [Heroku Button](https://blog.heroku.com/archives/2014/8/7/heroku-button)
+  .step(data-title='Create RingCentral SDK instance', data-file='index.js', data-highlight='9-13')
+    p In the node.js entry file, create RingCentral SDK instance with parameters from the configuration file.
 
-      Now, let's take a look at the first file that contains the actual content of the tutorial, `index.jade`.
+   .step(data-title='Create fax data holder', data-file='index.js', data-highlight='3,20')
+    :markdown
+      RingCentral platform accepts fax data in the form of `multipart/form-data`. In node.js, we use a module `form-data` to create `multipart/form-data` conveniently. This is our fax data holder.
 
-  .step(data-title='Step Two')
-    h2 Under Construction
+  .step(data-title='Set fax meta data', data-file='index.js', data-highlight='22-28')
+    :markdown
+      Fax meta data is a json object where we can specify receivers, fax resolution and other properties of fax. After creating the meta data, append it to the `formData`.
 
-    p more tutorial to come.
+  .step(data-title='Append a custom cover page from HTML', data-file='index.js', data-highlight='30-44')
+    :markdown
+      RingCentral custom fax cover page can be rendered from HTML. Create an HTML page by `Handlebars` template engine. Append the HTML to the `formData` and set the `contentType` as `text/html`.
 
-  //- Example: include markdown file
-    .step(data-title='Step Three', data-file='', data-highlight='')
-      include:markdown three.md
+  .step(data-title='Append a custom cover page from PDF', data-file='index.js', data-highlight='46-47')
+    :markdown
+      RingCentral custom fax cover page can be also rendered from PDF and multiple custom cover pages are accepted. Read the PDF file with node.js file stream and append it to the `formData` and set the `contentType` as `application/pdf`. Now the fax data is ready.
 
-  //- Example: include jade file (don't need file extension)
-    .step(data-title='Step Four', data-file='', data-highlight='')
-      include four
+  .step(data-title='Log into RingCentral', data-file='index.js', data-highlight='49-54')
+    :markdown
+      Log into RingCentral with password authentication flow.
 
+  .step(data-title='Send the fax', data-file='index.js', data-highlight='56-59')
+    :markdown
+      After login, make `POST` request to RingCentral platform fax endpoint `/account/~/extension/~/fax` along with `formData` to send the fax.
